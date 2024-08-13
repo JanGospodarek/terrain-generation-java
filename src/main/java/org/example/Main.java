@@ -6,6 +6,7 @@ import org.openimaj.image.MBFImage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import java.util.logging.Logger;
@@ -24,17 +25,28 @@ public class Main {
                     return;
                 }
                 MBFImage image = ImageUtilities.readMBF(imageFile);
-//                Point2d tl = new Point2dImpl(10, 10);
-//                Point2d bl = new Point2dImpl(10, image.getHeight() - 10);
-//                Point2d br = new Point2dImpl(image.getWidth() - 10, image.getHeight() - 10);
-//                Point2d tr = new Point2dImpl(image.getWidth() - 10, 10);
-//                            // Display the image
-                OneDimention oneDimention = new OneDimention(10, image.getWidth(), image.getHeight());
-//                image.drawConnectedPoints(Arrays.asList(tl, bl, br, tr, tl), new Float[] {1f, 0f, 0f});
+                OneDimention oneDimention = new OneDimention(40, image.getWidth(), image.getHeight());
+                ArrayList<Point> points = oneDimention.getPoints();
+                for (int i = 0; i < points.size() - 1; i++) {
+                    Point p1 = points.get(i);
+                    Point p2 = points.get(i + 1);
+                    image.drawLine(p1.x, p1.y, p2.x, p2.y, 1, new Float[]{1f, 0f, 0f});
+//                    drawSmoothCurve(image, p1, p2);
+                }
                 DisplayUtilities.display(image);
 
             } catch (IOException e) {
                 LOGGER.log(Level.SEVERE, "Error reading or displaying the image", e);
             }
     }
+
+//   private static void drawSmoothCurve(MBFImage image, Point p1, Point p2) {
+//        int steps = 100; // Number of steps for smooth curve
+//        for (int i = 0; i < steps; i++) {
+//            double t = (double) i / (steps - 1);
+//            double x = (1 - t) * p1.x + t * p2.x;
+//            double y = (1 - t) * p1.y + t * p2.y + Math.sin(t * Math.PI) * (p2.y - p1.y) / 2; // Adjust the amplitude as needed
+//            image.drawPoint(new org.openimaj.math.geometry.point.Point2dImpl((float) x, (float) y), new Float[]{1f, 0f, 0f}, 1);
+//        }
+//    }
 }
